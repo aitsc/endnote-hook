@@ -15,3 +15,5 @@ step 1: 将 [open.scpt](open.scpt) 中的内容拷贝到脚本, 如下图:
 step 2: 将 [address.scpt](address.scpt) 中的内容拷贝到脚本, 如下图:
 
 <img src="2.png" width = "500" alt="" align=center />
+
+reference: [document](https://researchsoftware.com/sites/researchsoftware.com/files/files/product_attachments/EndNote%20X9%20Mac%20Documentation.pdf)
