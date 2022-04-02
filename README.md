@@ -4,7 +4,7 @@
 
 example: 
 
-<img src="endnote-hook.gif" width = "500" alt="" align=center />
+<img src="endnote-hook.gif" width = "700" alt="" align=center />
 
 # method
 
