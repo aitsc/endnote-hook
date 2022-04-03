@@ -3,7 +3,6 @@ set labels to "{GAN}"
 
 # 要增加标签的论文所在的group
 set group to "Imported References"
-set group to "aaa     GAN"
 
 # library 名称
 set doc to "papers.enl"
