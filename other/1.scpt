@@ -11,6 +11,13 @@ set doc to "papers.enl"
 # 是否用于删除已存在的标签 true or false
 set is_del to "false"
 
+
+tell application "EndNote 20"
+	set myResults to get groups in window 1
+end tell
+log "所有group数量: " & (count of myResults)
+log myResults
+log
 log "标签: " & labels
 log "论文所在的group: " & group
 log "library 名称: " & doc
@@ -43,7 +50,12 @@ tell application "EndNote 20"
 		set Label_ to Label
 		repeat with l in labels_
 			if is_del = "false" then
-				if Label does not contain l then set Label to Label & l
+				if Label does not contain l then
+					if character -1 of Label ≠ "}" then set Label to Label & "
+
+"
+					set Label to Label & l
+				end if
 			else
 				set Label to my replace_chars(Label, l, "")
 			end if
