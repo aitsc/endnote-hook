@@ -12,7 +12,7 @@ set is_del to "false"
 
 
 tell application "EndNote 20"
-	set myResults to get groups in window 1
+	set myResults to get groups in window doc
 end tell
 log "所有group数量: " & (count of myResults)
 log myResults
