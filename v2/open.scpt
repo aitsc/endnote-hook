@@ -1,8 +1,10 @@
 # : represents space, 冒号代表空格. 数据库不能重名, 名字变了链接中的名字也要变
 # 链接例子 hook://endnote://?papers.enl=中4,Q3&My:EndNote:Library.enl=1&logic=and
 # 链接例子 hook://endnote://?papers.enl=text:&logic=or&field=Title
+# 链接例子 hook://endnote://?papers.enl=ag:::NLP书籍&logic=or&field=group
 # 链接例子 hook://endnote://?papers.enl=1991,1878&My:EndNote:Library.enl=1
 # logic 如果为空则使用编号匹配, 否则使用field匹配(默认Label). logic 如果是 or 则表示不同词是或的关系进行检索, and 就是且的关系
+# field 是 endnote 中的 Display Fields 的名字, 也可以是 group 来表示选择组
 # url不要自己encode编码, 词或编号用逗号(,)分隔
 
 on path2url(thepath)
@@ -19,8 +21,9 @@ on replace_chars(this_text, search_string, replacement_string)
 end replace_chars
 
 set fullURL to path2url("$0")
-# set fullURL to "endnote://?papers.enl=1991,1878&My:EndNote:Library.enl=1"
-# set fullURL to "endnote://?papers.enl=中4,Q3&My:EndNote:Library.enl=1&logic=and&field=Label"
+# set fullURL to "hook://endnote://?papers.enl=1991,1878&My:EndNote:Library.enl=1"
+# set fullURL to "hook://endnote://?papers.enl=ag:::NLP书籍&logic=or&field=group"
+# set fullURL to "hook://endnote://?papers.enl=中4,Q3&My:EndNote:Library.enl=1&logic=and&field=Label"
 set fullURL to replace_chars(fullURL, ":", " ")
 
 on theSplit(theString, theDelimiter)
@@ -61,7 +64,7 @@ end union
 
 set field_ to "Label"
 set logic_ to ""
-set doc_records to {} # {{"name",{"123"/"word",..}},..}
+set doc_records to {} # {{"name",{"123"/"word"/"group name",..}},..}
 set no_open_doc to ""
 tell application "EndNote 20"
 	set all_doc to name of every document
@@ -107,7 +110,11 @@ else
 		tell application "EndNote 20"
 			set myResults to {}
 			repeat with k in (item 2 of dr)
-				set end of myResults to find k in field field_
+				if field_ = "group" then
+					set end of myResults to get records in k in window (item 1 of dr)
+				else
+					set end of myResults to find k in field field_
+				end if
 			end repeat
 			set r to item 1 of (retrieve of "all" records in document (item 1 of dr))
 		end tell
