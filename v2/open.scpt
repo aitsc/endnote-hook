@@ -137,7 +137,7 @@ tell application "EndNote 20"
 	activate
 	repeat with dr in doc_results
 		show records in (item 2 of dr) in window (item 1 of dr)
-		highlight records in (item 2 of dr) in window (item 1 of dr)
+		if (count of item 2 of dr) = 1 then highlight records in (item 2 of dr) in window (item 1 of dr)
 	end repeat
 	set index of window (item 1 of (item 1 of doc_results)) to 1
 end tell
