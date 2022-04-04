@@ -1,5 +1,5 @@
 # : represents space, 冒号代表空格. 数据库不能重名, 名字变了链接中的名字也要变
-# 没有选择任何论文则会统计当前窗口显示论文的每个{..}标签出现论文的次数, 1千论文预计2-3秒
+# 没有选择任何论文则会统计当前窗口显示论文的每个{..}标签出现论文的次数, 1千论文预计5秒左右
 set only_use_front_document to "true" # true or false, 是否只获取最前面打开的endnote数据库
 
 on theSplit(theString, theDelimiter)
@@ -40,8 +40,29 @@ on each_count(inList) # {a,b,a} to {{a,2},{b,1}}
 		end repeat
 		set end of item_num to {i, i_n}
 	end repeat
-	return item_num
+	return sorted(item_num, 2, "true")
 end each_count
+
+on sorted(myList, ii, reversed) # 冒泡排序, 输入: ({{..},..}, 针对{..}中的第几个排序, 是否倒序)
+	repeat with i from 1 to (count of myList) - 1
+		repeat with j from i + 1 to count of myList
+			if reversed = "false" then
+				if item ii of item j of myList < item ii of item i of myList then
+					set temp to item i of myList
+					set item i of myList to item j of myList
+					set item j of myList to temp
+				end if
+			else
+				if item ii of item j of myList > item ii of item i of myList then
+					set temp to item i of myList
+					set item i of myList to item j of myList
+					set item j of myList to temp
+				end if
+			end if
+		end repeat
+	end repeat
+	return myList
+end sorted
 
 on union(list_list) # 多个list求并集, 一个list内部重复的元素会去除
 	local listA, listB
@@ -111,5 +132,4 @@ if dr_url = "" then
 	end repeat
 	display dialog out
 end if
-
 return "[en](hook://endnote/?" & dr_url & ")"
