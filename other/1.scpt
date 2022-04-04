@@ -1,9 +1,9 @@
 # 标签, 例如 {学习},{研究} 用逗号隔开
-set labels to "{GAN}"
+set labels to "{文本分类}"
 
 # 要增加标签的论文所在的group,逗号分隔
 set groups to "Imported References,Duplicate References"
-set groups to "aaa     GAN"
+set groups to "aab     文本分类"
 
 # library 名称
 set doc to "papers.enl"
@@ -77,7 +77,7 @@ tell application "EndNote 20"
 		repeat with l in labels_
 			if is_del = "false" then
 				if Label does not contain l then
-					if character -1 of Label ≠ "}" then set Label to Label & "
+					if Label ≠ "" and character -1 of Label ≠ "}" then set Label to Label & "
 
 "
 					set Label to Label & l
