@@ -86,8 +86,9 @@ on list2string(theList, theDelimiter) # list to str
 	return theString
 end list2string
 
+# 收集每个doc选择的记录
 tell application "EndNote 20"
-	set doc_records to {}
+	set doc_records to {}  # {{doc,{r,..}},..}
 	if only_use_front_document = "true" then
 		set docs to {front document}
 	else
@@ -99,6 +100,8 @@ tell application "EndNote 20"
 	end repeat
 end tell
 
+# 把记录转换为链接
+set s_num to 0
 set dr_url to ""
 repeat with dr in doc_records
 	if dr_url ≠ "" then set dr_url to dr_url & "&"
@@ -107,9 +110,11 @@ repeat with dr in doc_records
 		if character -1 of dr_url ≠ "=" then set dr_url to dr_url & ","
 		set dr_url to dr_url & item 4 of theSplit(r, "\"")
 	end repeat
+	set s_num to s_num + count of item 2 of dr
 end repeat
 set dr_url to replace_chars(dr_url, " ", ":")
 
+# 没有获取到记录就统计标签出现论文数量
 if dr_url = "" then
 	set nn to "
 "
@@ -132,4 +137,11 @@ if dr_url = "" then
 	end repeat
 	display dialog out
 end if
-return "[en](hook://endnote/?" & dr_url & ")"
+
+# 返回
+if s_num < 2 then
+	set s_num to ""
+else
+	set s_num to ":" & s_num
+end if
+return "[en" & s_num & "](hook://endnote/?" & dr_url & ")"
