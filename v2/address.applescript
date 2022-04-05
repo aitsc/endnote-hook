@@ -126,6 +126,7 @@ if dr_url = "" then
 		set opp to item 1 of opp
 		tell application "EndNote 20"
 			set rs to retrieve of "shown" records in front document
+			set doc_name to name of front document
 		end tell
 		set btns to {"No", "Yes"}
 		display dialog opp & " in Label ?" with title ("Shown papers num: " & count of rs) buttons btns default button 1
@@ -154,6 +155,8 @@ if dr_url = "" then
 				end repeat
 			end tell
 			display dialog opp & nn & nn & "shown papers: " & count of rs & ", modified papers: " & modify_n
+			set labels to item 2 of theSplit(opp, ":")
+			return "[en:" & labels & "](hook://endnote/?" & doc_name & "=" & labels & "&logic=and)"
 		end if
 	else  # 统计标签出现论文数量
 		tell application "EndNote 20"
