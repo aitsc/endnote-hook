@@ -2,7 +2,7 @@
 # 没有选择任何论文则会统计当前窗口显示论文的每个{..}标签出现论文的次数, 1千论文预计5秒左右
 # 没有选择任何论文时, 如果剪切板包含匹配正则 "/^(add|del):(\\{.+?\\},)*(\\{.+?\\})?$/g" 的字符串, 那么就会增加删除当前显示的论文标签
 # 例如 add:{123},{abc} 就是为当前显示的论文增加{123}和{abc}两个标签
-set only_use_front_document to "true" # true or false, 是否只获取最前面打开的endnote数据库
+set only_use_front_document to "true" # true or false, 是否只获取最前面打开的endnote数据库. 只针对获取链接
 
 on theSplit(theString, theDelimiter)
 	set oldDelimiters to AppleScript's text item delimiters
