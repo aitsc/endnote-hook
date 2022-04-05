@@ -1,5 +1,7 @@
 # : represents space, 冒号代表空格. 数据库不能重名, 名字变了链接中的名字也要变
 # 没有选择任何论文则会统计当前窗口显示论文的每个{..}标签出现论文的次数, 1千论文预计5秒左右
+# 没有选择任何论文时, 如果剪切板包含匹配正则 "/^(add|del):(\\{.+?\\},)*(\\{.+?\\})?$/g" 的字符串, 那么就会增加删除当前显示的论文标签
+# 例如 add:{123},{abc} 就是为当前显示的论文增加{123}和{abc}两个标签
 set only_use_front_document to "true" # true or false, 是否只获取最前面打开的endnote数据库
 
 on theSplit(theString, theDelimiter)
@@ -114,28 +116,65 @@ repeat with dr in doc_records
 end repeat
 set dr_url to replace_chars(dr_url, " ", ":")
 
-# 没有获取到记录就统计标签出现论文数量
+# 没有获取到记录就统计标签出现论文数量, 或者执行其他操作
 if dr_url = "" then
 	set nn to "
 "
-	tell application "EndNote 20"
-		set rs to retrieve of "shown" records in front document
-		log "发现论文数量(含重复): " & (count of rs)
-		set rs to my union({rs})
-		set out to "论文数量: " & (count of rs)
-		log "统计每个标签出现的次数: ..."
-		set t to {}
-		repeat with r in rs
-			set end of t to field "Label" of record r
+	# 尝试从剪切板中获取增加或删除标签
+	set opp to match(the clipboard as text, "/^(add|del):(\\{.+?\\},)*(\\{.+?\\})?$/g")
+	if count of opp = 1 then
+		set opp to item 1 of opp
+		tell application "EndNote 20"
+			set rs to retrieve of "shown" records in front document
+		end tell
+		set btns to {"No", "Yes"}
+		display dialog opp & " in Label ?" with title ("Shown papers num: " & count of rs) buttons btns default button 1
+		if the button returned of the result = "Yes" then
+			set all_labels to match(opp, "/\\{.+?\\}/g")
+			set op to item 1 of theSplit(opp, ":")
+			set modify_n to 0
+			tell application "EndNote 20"
+				repeat with r in rs
+					set Label to field "Label" of record r
+					set Label_ to Label
+					repeat with l in all_labels
+						if op = "add" then
+							if Label does not contain l then
+								if Label ≠ "" and character -1 of Label ≠ "}" then set Label to Label & nn & nn
+								set Label to Label & l
+							end if
+						else
+							set Label to my replace_chars(Label, l, "")
+						end if
+					end repeat
+					if Label_ ≠ Label then
+						set field "Label" of record r to Label
+						set modify_n to modify_n + 1
+					end if
+				end repeat
+			end tell
+			display dialog opp & nn & nn & "shown papers: " & count of rs & ", modified papers: " & modify_n
+		end if
+	else  # 统计标签出现论文数量
+		tell application "EndNote 20"
+			set rs to retrieve of "shown" records in front document
+			log "发现论文数量(含重复): " & (count of rs)
+			set rs to my union({rs})
+			set out to "论文数量: " & (count of rs)
+			log "统计每个标签出现的次数: ..."
+			set t to {}
+			repeat with r in rs
+				set end of t to field "Label" of record r
+			end repeat
+		end tell
+		set all_labels to match(list2string(t, ""), "/\\{.+?\\}/g")
+		set out to out & "; 标签种数: " & (count of union({all_labels}))
+		set out to out & "; 标签个数: " & (count of all_labels) & "; 每个标签出现次数:" & nn & nn
+		repeat with l_n in each_count(all_labels)
+			set out to out & item 1 of l_n & ":" & item 2 of l_n & ", "
 		end repeat
-	end tell
-	set all_labels to match(list2string(t, ""), "/\\{.+?\\}/g")
-	set out to out & "; 标签种数: " & (count of union({all_labels}))
-	set out to out & "; 标签个数: " & (count of all_labels) & "; 每个标签出现次数:" & nn & nn
-	repeat with l_n in each_count(all_labels)
-		set out to out & item 1 of l_n & ":" & item 2 of l_n & ", "
-	end repeat
-	display dialog out
+		display dialog out
+	end if
 end if
 
 # 返回
