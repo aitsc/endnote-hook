@@ -1,10 +1,16 @@
-from tqdm import tqdm
-import pyperclip
+
 import itertools
-from tsc_base import fr_letter, fr_en_letter, replace
 import re
-import jieba
-import stanza
+try:
+    from tqdm import tqdm
+    import pyperclip
+    from tsc_base import fr_letter, fr_en_letter, replace
+    import jieba
+    import stanza
+except:
+    print('请在终端运行: pip install tqdm pyperclip tsc_base jieba stanza')
+    print('请确定依赖没有装在其他的python环境下')
+    raise NameError('未装依赖!')
 
 len_top_k = 3  # 最多统计多少个词的排列组合, 越大速度越慢
 group_top_k = 20  # 每种排列组合最多展示前多少个group统计结果
