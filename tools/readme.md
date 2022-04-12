@@ -13,7 +13,7 @@
 3. 将 [get_title](get_title.ens) 文件用 endnote 打开并保存
 4. 在 endnote 中选择导出的参考文献格式为 get_title
 5. 选中要统计的参考文献, 右键点击 Copy Formatted references (借助剪切板)
-6. 进入当前目录运行程序 python3 3.stat_word_frequency.py
+6. 进入当前目录运行程序([stopwords](stopwords)文件要在同一个目录下) python3 3.stat_word_frequency.py
 7. 还可以进入 [3.stat_word_frequency.py](3.stat_word_frequency.py) 修改前面3个参数来控制输出内容
 
 <img src="3.gif" width = "500" alt="" align=center />
