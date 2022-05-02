@@ -1,13 +1,13 @@
-## 1. 自动为endnote中多个group的所有记录增加或删除label, 并生成跳转的链接
+## 功能1. 自动为endnote中多个group的所有记录增加或删除label, 并生成跳转的链接
 方法: 将 [1.applescript](1.applescript) 中的内容拷贝到系统自带的脚本编辑器app, 然后修改4个参数, 如下图:
 
 <img src="1.png" width = "300" alt="" align=center />
 
 点击右上角▶️运行, 点击左下角清单符号查看信息
 
-## 2. 统计筛选的group中每个标签的数量
+## 功能2. 统计筛选的group中每个标签的数量
 
-## 3. 统计出现在标题中某些词的排列组合的论文数量 (windows/mac)
+## 功能3. 统计出现在标题中某些词的排列组合的论文数量 (windows/mac)
 1. 安装 python3 和 pip
 2. 运行 pip install tqdm pyperclip tsc_base jieba stanza
 3. 将 [get_title](get_title.ens) 文件用 endnote 打开并保存
